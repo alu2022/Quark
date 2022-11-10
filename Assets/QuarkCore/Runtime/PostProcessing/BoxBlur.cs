@@ -74,22 +74,21 @@ public class BoxBlurPass : ScriptableRenderPass
         cmd.SetGlobalTexture(mainTexId, src);
         boxBlurMaterial.SetFloat("_BlurRange", settings.blurRange);
 
+        var width = camera.scaledPixelWidth;
+        var height = camera.scaledPixelHeight;
+
+        cmd.GetTemporaryRT(tmpTargetId, width, height, 0, FilterMode.Trilinear, RenderTextureFormat.Default);
+        RenderTargetIdentifier buffer = tmpTargetId;
+
         for (int i = 0; i < settings.blurTimes; ++i) {
-            cmd.GetTemporaryRT(
-                tmpTargetId,
-                camera.pixelWidth,
-                camera.pixelHeight,
-                0,
-                FilterMode.Point,
-                RenderTextureFormat.Default
-            );
-
-            cmd.Blit(src, tmpTargetId, boxBlurMaterial, 0);
-            cmd.Blit(tmpTargetId, src);
-
-            cmd.ReleaseTemporaryRT(tmpTargetId);
+            cmd.Blit(src, buffer, boxBlurMaterial, 0); 
+            var temRT = src;
+            src = buffer;
+            buffer = temRT;
         }
 
+        cmd.Blit(tmpTargetId, src);
+        cmd.ReleaseTemporaryRT(tmpTargetId);
         context.ExecuteCommandBuffer(cmd);
         CommandBufferPool.Release(cmd);
     }

@@ -20,7 +20,7 @@ Shader "QuarkPostProcessing/DualKawaseBlur"
 		{
 			Name"DualKawaseBlurDownSample"
 			HLSLPROGRAM
-				#pragma vertex DualKawaseDownVert
+				#pragma vertex PostProcessingVert
 				#pragma fragment DualKawaseDownFrag
 			ENDHLSL
 		}
@@ -29,7 +29,7 @@ Shader "QuarkPostProcessing/DualKawaseBlur"
 		{
 			Name"DualKawaseBlurUpSample"
 			HLSLPROGRAM
-				#pragma vertex DualKawaseUpVert
+				#pragma vertex PostProcessingVert
 				#pragma fragment DualKawaseUpFrag
 			ENDHLSL
 		}

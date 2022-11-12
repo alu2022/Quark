@@ -24,9 +24,37 @@ struct v2f
     half2 uv : TEXCOORD0;
 };
 
+struct v2f_dkd
+{
+    half4 vertex : SV_POSITION;
+    half2 uv : TEXCOORD0;
+};
+
+struct v2f_dku
+{
+    half4 vertex : SV_POSITION;
+    half2 uv : TEXCOORD0;
+};
+
 v2f PostProcessingVert(appdata v)
 {
     v2f o = (v2f) 0;
+    o.vertex = TransformObjectToHClip(v.positionOS.xyz);
+    o.uv = v.uv;
+    return o;
+}
+
+v2f_dkd DualKawaseDownVert(appdata v)
+{
+    v2f_dkd o = (v2f_dkd) 0;
+    o.vertex = TransformObjectToHClip(v.positionOS.xyz);
+    o.uv = v.uv;
+    return o;
+}
+
+v2f_dku DualKawaseUpVert(appdata v)
+{
+    v2f_dku o = (v2f_dku) 0;
     o.vertex = TransformObjectToHClip(v.positionOS.xyz);
     o.uv = v.uv;
     return o;
@@ -93,6 +121,33 @@ half4 KawaseBlurFrag(v2f i) : SV_Target
     col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(1, 1) * _BlurRange);
     col /= 5;
     return col;
+}
+
+half4 DualKawaseDownFrag(v2f_dkd i) : SV_Target
+{
+    float halfBlurRange = _BlurRange * 0.5;
+    float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * 4;
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-halfBlurRange, -halfBlurRange));
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-halfBlurRange, halfBlurRange));
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(halfBlurRange, -halfBlurRange));
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(halfBlurRange, halfBlurRange));
+
+    return col * 0.125;
+}
+
+half4 DualKawaseUpFrag(v2f_dku i) : SV_Target
+{
+    float halfBlurRange = _BlurRange * 0.5;
+    float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * 2;
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-halfBlurRange, halfBlurRange)) * 2;
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(halfBlurRange, -halfBlurRange)) * 2;
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(halfBlurRange, halfBlurRange)) * 2;
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-_BlurRange, 0));
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(0, -_BlurRange));
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(_BlurRange, 0));
+    col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(0, _BlurRange));
+
+    return col * 0.0833;
 }
 
 #endif

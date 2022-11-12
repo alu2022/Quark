@@ -29,11 +29,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e87fa8288d92745a09ee27ee644eb5, type: 3}
   m_Name: KawaseBlur
   m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    blurTimes: 2
+    blurRange: 0.00136
+    downSampling: 4
+--- !u!114 &-7807545286185903752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4801fe527360dd438bffd23d3c3293e, type: 3}
+  m_Name: DualKawaseBlur
+  m_EditorClassIdentifier: 
   m_Active: 1
   settings:
     blurTimes: 2
-    blurRange: 0.00129
-    downSampling: 4
+    blurRange: 0.00624
+    downSampling: 2
 --- !u!114 &-2316868841971187147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,7 +116,8 @@ MonoBehaviour:
   - {fileID: 6817999153442730303}
   - {fileID: -8253888310595028005}
   - {fileID: -8004277962684073953}
-  m_RendererFeatureMap: adc0de57c6d2eee53f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb90
+  - {fileID: -7807545286185903752}
+  m_RendererFeatureMap: adc0de57c6d2eee53f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}

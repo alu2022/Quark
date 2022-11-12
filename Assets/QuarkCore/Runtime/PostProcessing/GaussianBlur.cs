@@ -72,7 +72,7 @@ public class GaussianBlurPass : ScriptableRenderPass
         cmd = CommandBufferPool.Get(cmdName);
         var camera = renderingData.cameraData.camera;
 
-        cmd.SetGlobalTexture(mainTexId, src);
+        //cmd.SetGlobalTexture(mainTexId, src);
         gaussianBlurMaterial.SetFloat("_BlurRange", settings.blurRange);
 
         var width = camera.scaledPixelWidth / settings.downSampling;

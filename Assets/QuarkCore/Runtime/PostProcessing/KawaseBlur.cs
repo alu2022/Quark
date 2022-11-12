@@ -72,7 +72,7 @@ public class KawaseBlurPass : ScriptableRenderPass
         cmd = CommandBufferPool.Get(cmdName);
         var camera = renderingData.cameraData.camera;
 
-        cmd.SetGlobalTexture(mainTexId, src);
+        //cmd.SetGlobalTexture(mainTexId, src);
         kawaseBlurMaterial.SetFloat("_BlurRange", settings.blurRange);
 
         var width = camera.scaledPixelWidth / settings.downSampling;

@@ -46,11 +46,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4801fe527360dd438bffd23d3c3293e, type: 3}
   m_Name: DualKawaseBlur
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     blurTimes: 2
     blurRange: 0.00624
     downSampling: 2
+--- !u!114 &-4663109758072231516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0470813a73914b84b83f07d52f89a62b, type: 3}
+  m_Name: RadialBlur
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    blurTimes: 4
+    blurRange: 0.01
 --- !u!114 &-2316868841971187147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
   m_Name: SSAO
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
   m_Settings:
     Downsample: 0
@@ -96,6 +112,22 @@ MonoBehaviour:
     DirectLightingStrength: 0.25
     Radius: 0.25
     SampleCount: 12
+--- !u!114 &-1025481373870185529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab81a8c3f39c87408db934edfe8202f, type: 3}
+  m_Name: GrainyBlur
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    blurTimes: 4
+    blurRange: 0.00324
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +149,9 @@ MonoBehaviour:
   - {fileID: -8253888310595028005}
   - {fileID: -8004277962684073953}
   - {fileID: -7807545286185903752}
-  m_RendererFeatureMap: adc0de57c6d2eee53f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693
+  - {fileID: -1025481373870185529}
+  - {fileID: -4663109758072231516}
+  m_RendererFeatureMap: adc0de57c6d2eee53f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693c723b0aa1fc2c4f1a4697299614e49bf
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}

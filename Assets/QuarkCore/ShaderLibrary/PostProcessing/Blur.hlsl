@@ -7,6 +7,7 @@
 CBUFFER_START(UnityPerMaterial)
 float4 _MainTex_ST;
 float _BlurRange;
+float _Iteration;
 CBUFFER_END
 
 TEXTURE2D(_MainTex);
@@ -46,6 +47,43 @@ half4 BoxBlurFrag(v2f i) : SV_Target
     
     color /= 9;
     return half4(color, 1);
+}
+
+float Rand(float2 n)
+{
+    return sin(dot(n, half2(1233.224, 1743.335)));
+}
+
+half4 GrainyBlurFrag(v2f i) : SV_Target
+{
+    half2 randomOffset = float2(0.0, 0.0);
+    half4 color = half4(0.0, 0.0, 0.0, 0.0);
+    float random = Rand(i.uv);
+		
+    for (int k = 0; k < int(_Iteration); k++)
+    {
+        random = frac(43758.5453 * random + 0.61432);;
+        randomOffset.x = (random - 0.5) * 2.0;
+        random = frac(43758.5453 * random + 0.61432);
+        randomOffset.y = (random - 0.5) * 2.0;
+			
+        color += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, half2(i.uv + randomOffset * _BlurRange));
+    }
+    return color / _Iteration;
+}
+
+half4 RadialBlurFrag(v2f i) : SV_Target
+{
+    half2 moveVec = (half2(0.5, 0.5) - i.uv) * _BlurRange;
+    half4 color = half4(0, 0, 0, 0);
+		
+    [unroll(30)]
+    for (int k = 0; k < int(_Iteration); k++)
+    {
+        color += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+        i.uv += moveVec;
+    }
+    return color / _Iteration;
 }
 
 half4 GaussianBlurFragHor(v2f i) : SV_Target

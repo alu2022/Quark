@@ -146,7 +146,8 @@ MonoBehaviour:
   - {fileID: -7807545286185903752}
   - {fileID: -1025481373870185529}
   - {fileID: -4663109758072231516}
-  m_RendererFeatureMap: 3f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693c723b0aa1fc2c4f1a4697299614e49bf
+  - {fileID: 5255797063839048845}
+  m_RendererFeatureMap: 3f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693c723b0aa1fc2c4f1a4697299614e49bf8de4aa499557f048
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -186,6 +187,19 @@ MonoBehaviour:
   m_ClusteredRendering: 0
   m_TileSize: 32
   m_IntermediateTextureMode: 1
+--- !u!114 &5255797063839048845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d3039bd3eef23d4f8daa7c408205dfa, type: 3}
+  m_Name: DepthNormal
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &6817999153442730303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb73dcd8c6b38d947b09a258129eea53, type: 3}
   m_Name: BoxBlur
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     blurTimes: 3
     blurRange: 0.0013

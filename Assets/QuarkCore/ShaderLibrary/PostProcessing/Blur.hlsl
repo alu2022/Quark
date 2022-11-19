@@ -1,39 +1,34 @@
 #ifndef _QUARK_BLUR_
 #define _QUARK_BLUR_
 
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl" 
-#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+#include "Common.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-float4 _MainTex_ST;
 float _BlurRange;
 float _Iteration;
 CBUFFER_END
 
-TEXTURE2D(_MainTex);
-SAMPLER(sampler_MainTex);
-
-struct appdata
+struct blur_appdata
 {
     half4 positionOS : POSITION;
     half2 uv : TEXCOORD0;
 };
 
-struct v2f
+struct blur_v2f
 {
     half4 vertex : SV_POSITION;
     half2 uv : TEXCOORD0;
 };
 
-v2f PostProcessingVert(appdata v)
+blur_v2f PostProcessingVert(blur_appdata v)
 {
-    v2f o = (v2f) 0;
+    blur_v2f o = (blur_v2f) 0;
     o.vertex = TransformObjectToHClip(v.positionOS.xyz);
     o.uv = v.uv;
     return o;
 }
 
-half4 BoxBlurFrag(v2f i) : SV_Target
+half4 BoxBlurFrag(blur_v2f i) : SV_Target
 {
     float3 color = float3(0, 0, 0);
     
@@ -54,7 +49,7 @@ float Rand(float2 n)
     return sin(dot(n, half2(1233.224, 1743.335)));
 }
 
-half4 GrainyBlurFrag(v2f i) : SV_Target
+half4 GrainyBlurFrag(blur_v2f i) : SV_Target
 {
     half2 randomOffset = float2(0.0, 0.0);
     half4 color = half4(0.0, 0.0, 0.0, 0.0);
@@ -72,7 +67,7 @@ half4 GrainyBlurFrag(v2f i) : SV_Target
     return color / _Iteration;
 }
 
-half4 RadialBlurFrag(v2f i) : SV_Target
+half4 RadialBlurFrag(blur_v2f i) : SV_Target
 {
     half2 moveVec = (half2(0.5, 0.5) - i.uv) * _BlurRange;
     half4 color = half4(0, 0, 0, 0);
@@ -86,7 +81,7 @@ half4 RadialBlurFrag(v2f i) : SV_Target
     return color / _Iteration;
 }
 
-half4 GaussianBlurFragHor(v2f i) : SV_Target
+half4 GaussianBlurFragHor(blur_v2f i) : SV_Target
 {
     float4 col = float4(0, 0, 0, 0);
 
@@ -104,7 +99,7 @@ half4 GaussianBlurFragHor(v2f i) : SV_Target
     return col;
 }
 
-half4 GaussianBlurFragVert(v2f i) : SV_Target
+half4 GaussianBlurFragVert(blur_v2f i) : SV_Target
 {
     float4 col = float4(0, 0, 0, 0);
 
@@ -122,7 +117,7 @@ half4 GaussianBlurFragVert(v2f i) : SV_Target
     return col;
 }
 
-half4 KawaseBlurFrag(v2f i) : SV_Target
+half4 KawaseBlurFrag(blur_v2f i) : SV_Target
 {
     float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
     col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-1, -1) * _BlurRange);
@@ -133,7 +128,7 @@ half4 KawaseBlurFrag(v2f i) : SV_Target
     return col;
 }
 
-half4 DualKawaseDownFrag(v2f i) : SV_Target
+half4 DualKawaseDownFrag(blur_v2f i) : SV_Target
 {
     float halfBlurRange = _BlurRange * 0.5;
     float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * 4;
@@ -145,7 +140,7 @@ half4 DualKawaseDownFrag(v2f i) : SV_Target
     return col * 0.125;
 }
 
-half4 DualKawaseUpFrag(v2f i) : SV_Target
+half4 DualKawaseUpFrag(blur_v2f i) : SV_Target
 {
     float halfBlurRange = _BlurRange * 0.5;
     float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * 2;

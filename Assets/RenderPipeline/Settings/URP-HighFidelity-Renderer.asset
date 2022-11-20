@@ -202,11 +202,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    MaxStep: 10
-    StepSize: 0.25
-    MaxDistance: 10
-    Thickness: 0.25
-    blurRange: 0.00015
+    MaxStep: 100
+    StepSize: 10
+    MaxDistance: 10000
+    Thickness: 10
+    blurRange: 0.0015
     downSampling: 1
     blurTimes: 2
 --- !u!114 &5255797063839048845

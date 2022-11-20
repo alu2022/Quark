@@ -58,5 +58,68 @@ Shader "QuarkPostProcessing/ScreenSpaceReflection"
 				#pragma fragment DualKawaseUpFrag
 			ENDHLSL
         }
+
+            Pass{
+
+            //pass3
+
+                          Name"Mask"//Pass3
+
+                           Tags{
+                                         "LightMode" = "UniversalForward"}
+
+
+                         ZTest on
+                         ZWrite on
+                         Cull back
+
+
+                                    HLSLPROGRAM
+
+                                    #pragma vertex vert_mask
+                        #pragma fragment frag_mask
+
+                               struct a2v {
+                                    float4 positionOS:POSITION;
+                                    float2 uv           : TEXCOORD0;
+                               };
+                                struct v2f {
+                                    float4 positionHCS : SV_POSITION;
+                                    float2 uv           : TEXCOORD0;
+                                };
+
+
+                                v2f vert_mask(a2v v)
+                                {
+                                    v2f o;
+
+                                   o.positionHCS = TransformObjectToHClip(v.positionOS);
+                                   return o;
+
+                            }
+                                half4 frag_mask(v2f i) :SV_Target
+                                {
+                                    return float4(1,1,1,1);
+
+                                }
+
+                        ENDHLSL
+                   }
+
+        Pass{
+            Name"Mix"
+            Tags{"LightMode" = "UniversalForward"}
+
+            ZTest Off
+            Cull Off
+            ZWrite Off
+
+            HLSLPROGRAM
+
+            #pragma vertex MixVert
+            #pragma fragment MixFrag
+
+            ENDHLSL
+        }
 	}
 }

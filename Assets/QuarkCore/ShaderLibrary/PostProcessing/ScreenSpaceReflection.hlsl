@@ -3,11 +3,6 @@
 
 #include "Common.hlsl"
 
-#define SSRDitherMatrix_m0 float4(0,0.5,0.125,0.625)
-#define SSRDitherMatrix_m1 float4(0.75,0.25,0.875,0.375)
-#define SSRDitherMatrix_m2 float4(0.187,0.687,0.0625,0.562)
-#define SSRDitherMatrix_m3 float4(0.937,0.437,0.812,0.312)
-
 struct ssr_appdata
 {
     float4 vertex : POSITION;
@@ -22,6 +17,18 @@ struct ssr_v2f
     float4 rayVS : TEXCOORD1;
 };
 
+struct mix_a2v
+{
+    float4 positionOS : POSITION;
+    float2 uv : TEXCOORD0;
+
+};
+struct mix_v2f
+{
+    float4 positionHCS : SV_POSITION;
+    float2 uv : TEXCOORD0;
+};
+
 CBUFFER_START(UnityPerMaterial)       
     float _MaxStep;
     float _StepSize;
@@ -29,8 +36,11 @@ CBUFFER_START(UnityPerMaterial)
     float _Thickness;
 CBUFFER_END
 
-TEXTURE2D(_CameraDepthNormalsTexture); 
-SAMPLER(sampler_CameraDepthNormalsTexture);
+TEXTURE2D(_CameraDepthNormalsTexture); SAMPLER(sampler_CameraDepthNormalsTexture);
+TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
+TEXTURE2D(_DitherMap); SAMPLER(sampler_DitherMap);
+TEXTURE2D(_ReflectTex); SAMPLER(sampler_ReflectTex);
+TEXTURE2D(_SourTex); SAMPLER(sampler_SourTex);
 
 inline float DecodeFloatRG(float2 enc)
 {
@@ -60,13 +70,74 @@ ssr_v2f ScreenSpaceReflectionVert(ssr_appdata i)
     ssr_v2f o = (ssr_v2f) 0;
     o.vertex = TransformObjectToHClip(i.vertex);
     o.uv = i.uv;
-    #if UNITY_UV_STARTS_TOP
-        o.uv.y = 1 - o.uv.y;
-    #endif
-    float4 viewRayNDC = half4(i.uv * 2 - 1, 1, 1);
-    float4 viewRayPS = viewRayNDC * _ProjectionParams.z;
-    o.rayVS = mul(unity_CameraInvProjection, viewRayPS);
+    float4 viewRayNDC = float4(i.uv * 2 - 1, 1, 1);
+    o.rayVS = mul(unity_CameraInvProjection, viewRayNDC);
+    o.rayVS.xyz /= o.rayVS.w;
     return o;
+}
+
+bool checkDepthCollision(float3 viewPos, out float2 screenPos, inout float depthDistance)
+{
+    float4 clipPos = mul(unity_CameraProjection, float4(viewPos, 1.0));
+    clipPos = clipPos / clipPos.w;
+    screenPos = float2(clipPos.x, clipPos.y) * 0.5 + 0.5;
+    
+    float4 reflectDepthNormals = SAMPLE_TEXTURE2D(_CameraDepthNormalsTexture, sampler_CameraDepthNormalsTexture, screenPos);
+    float4 depthcolor = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, screenPos);
+    float depth = LinearEyeDepth(depthcolor, _ZBufferParams) + 0.2;
+                
+    return screenPos.x > 0 && screenPos.y > 0 && screenPos.x < 1.0 && screenPos.y < 1.0 && (depth < -viewPos.z) && depth + _Thickness > -viewPos.z;
+}
+
+bool viewSpaceRayMarching(float3 rayOri, float3 rayDir, float currentRayMarchingStepSize, inout float depthDistance, inout float3 currentViewPos, inout float2 hitScreenPos, float2 ditherUV)
+{
+    float2 offsetUV = fmod(floor(ditherUV), 4.0);
+    float ditherValue = SAMPLE_TEXTURE2D(_DitherMap, sampler_DitherMap, offsetUV * 0.25).a;
+    rayOri += ditherValue * rayDir;
+
+    UNITY_LOOP
+    for (int i = 0; i < _MaxStep; i++)
+    {
+        float3 currentPos = rayOri + rayDir * currentRayMarchingStepSize * i;
+
+        if (length(rayOri - currentPos) > _MaxDistance)
+            return false;
+        if (checkDepthCollision(currentPos, hitScreenPos, depthDistance))
+        {
+            currentViewPos = currentPos;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool binarySearchRayMarching(float3 rayOri, float3 rayDir, inout float2 hitScreenPos, float2 ditherUV)
+{
+    float currentStepSize = _StepSize;
+    float3 currentPos = rayOri;
+    float depthDistance = 0;
+   
+    UNITY_LOOP
+    for (int i = 0; i < _MaxStep; i++)
+    {
+        if (viewSpaceRayMarching(rayOri, rayDir, currentStepSize, depthDistance, currentPos, hitScreenPos, ditherUV))
+        {
+            if (depthDistance < _Thickness)
+            {
+                return true;
+            }
+            rayOri = currentPos - rayDir * currentStepSize;
+            currentStepSize *= 0.5;
+        }
+        else
+        {
+            return false;
+        }
+    }
+                 
+    return false;
+                                 
+
 }
 
 half4 ScreenSpaceReflectionFrag(ssr_v2f i) : SV_Target
@@ -78,39 +149,39 @@ half4 ScreenSpaceReflectionFrag(ssr_v2f i) : SV_Target
     float linerDepth01 = 0;
     float3 normal = float3(0, 0, 0);
     DecodeDepthNormal(depthNormals, linerDepth01, normal);
-    
-    float3 posVS = i.rayVS.xyz * linerDepth01;
+    float4 depthcolor = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv);
+    float linear01Depth = Linear01Depth(depthcolor, _ZBufferParams);
+    float3 posVS = i.rayVS.xyz * linear01Depth;
     
     float3 viewDir = normalize(posVS);
-    float3 rayDir = reflect(viewDir, normal);
+    float3 rayDir = normalize(reflect(viewDir, normal));
     
-    float2 ditherXY = i.vertex.xy;
-    float4x4 SSRDitherMatrix = float4x4(SSRDitherMatrix_m0, SSRDitherMatrix_m1, SSRDitherMatrix_m2, SSRDitherMatrix_m3);
-    
-    float2 XY = floor(fmod(ditherXY, 4));
-    float dither = SSRDitherMatrix[XY.y][XY.x];
-    
-    UNITY_LOOP
-    for (int i = 0; i < _MaxStep; ++i)
+    float2 hitScreenPos = float2(0, 0);
+    if (binarySearchRayMarching(posVS, rayDir, hitScreenPos, i.uv))
     {
-        float3 raycastPosWS = posVS + rayDir * _StepSize * i + rayDir * dither;
-        float4 raycastPosVS = mul(unity_CameraProjection, float4(raycastPosWS, 1));
-        raycastPosVS.xy /= raycastPosVS.w;
-        reflectUV = raycastPosVS.xy * 0.5 + 0.5;
-        float4 reflectDepthNormals = SAMPLE_TEXTURE2D(_CameraDepthNormalsTexture, sampler_CameraDepthNormalsTexture, reflectUV);
-        float depth = DecodeFloatRG(reflectDepthNormals.zw) * _ProjectionParams.z + 0.2;
-        float reflectDepth = -raycastPosWS.z;
-        
-        if (length(raycastPosWS - posVS) > _MaxDistance || reflectUV.x < 0.0 || reflectUV.y < 0.0 || reflectUV.x > 1.0 || reflectUV.y > 1.0)
-            break;
-        
-        half depthSign = sign(depth - reflectDepth);
-        _StepSize *= depthSign;
-        if (abs(depth - reflectDepth) < _Thickness)
-            return color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, reflectUV);
+        float4 reflectTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, hitScreenPos);
+        color.rgb = reflectTex.rgb;
     }
     
     return color;
+}
+
+mix_v2f MixVert(mix_a2v v)
+{
+    mix_v2f o;
+
+    o.positionHCS = TransformObjectToHClip(v.positionOS);
+    o.uv = v.uv;
+    return o;
+
+}
+            
+half4 MixFrag(mix_v2f i) : SV_Target
+{
+    half4 reflectTex = SAMPLE_TEXTURE2D(_ReflectTex, sampler_ReflectTex, i.uv);
+    half4 sourTex = SAMPLE_TEXTURE2D(_SourTex, sampler_SourTex, i.uv);
+
+    return lerp(sourTex, reflectTex, reflectTex);
 }
 
 #endif

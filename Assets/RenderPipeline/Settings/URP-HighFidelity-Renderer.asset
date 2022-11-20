@@ -70,6 +70,25 @@ MonoBehaviour:
     downSampling: 1
     gaussianBlurShader: {fileID: 7200000, guid: 60bf2929232542949b1466f6e2132187,
       type: 3}
+--- !u!114 &-5817178533089221768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb3f774fcb61e0409813d94032f0ff9, type: 3}
+  m_Name: Outline
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    outlineThickness: 2
+    depthSensitivity: 0.1
+    normalsSensitivity: 1
+    colorSensitivity: 1
+    outlineColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &-4663109758072231516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,8 +166,10 @@ MonoBehaviour:
   - {fileID: -1025481373870185529}
   - {fileID: -4663109758072231516}
   - {fileID: 5255797063839048845}
-  - {fileID: 1304776012880406291}
-  m_RendererFeatureMap: 3f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693c723b0aa1fc2c4f1a4697299614e49bf8de4aa499557f04813e72fe7de7e1b12
+  - {fileID: 7196823903573798905}
+  - {fileID: -5817178533089221768}
+  - {fileID: 3142651260248998952}
+  m_RendererFeatureMap: 3f31de531b669e5edbfb3bff4f4c748d1f78baf69917eb9078191da9ed06a693c723b0aa1fc2c4f1a4697299614e49bf8de4aa499557f048f96f8ebb3541e063786330e4f13a45af284413b4abf09c2b
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -188,7 +209,7 @@ MonoBehaviour:
   m_ClusteredRendering: 0
   m_TileSize: 32
   m_IntermediateTextureMode: 1
---- !u!114 &1304776012880406291
+--- !u!114 &3142651260248998952
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,18 +218,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c1f44f468d096040aec7cf80b7b3e73, type: 3}
-  m_Name: ScreenSpaceReflection
+  m_Script: {fileID: 11500000, guid: 5cddc0b6eb66c854bb1d39a4b3d98963, type: 3}
+  m_Name: BrightnessSaturationContrast
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    MaxStep: 100
-    StepSize: 10
-    MaxDistance: 10000
-    Thickness: 10
-    blurRange: 0.0015
-    downSampling: 1
-    blurTimes: 2
+    brightness: 1.25
+    saturation: 1.96
+    contrast: 1.03
 --- !u!114 &5255797063839048845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,3 +255,41 @@ MonoBehaviour:
   settings:
     blurTimes: 3
     blurRange: 0.0013
+--- !u!114 &6858623530379031198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cddc0b6eb66c854bb1d39a4b3d98963, type: 3}
+  m_Name: BriSatCon
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    brightness: 1
+    saturation: 1
+    contrast: 1
+--- !u!114 &7196823903573798905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c1f44f468d096040aec7cf80b7b3e73, type: 3}
+  m_Name: ScreenSpaceReflection
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    MaxStep: 10
+    StepSize: 1
+    MaxDistance: 10
+    Thickness: 1
+    blurRange: 0.00015
+    downSampling: 4
+    blurTimes: 2

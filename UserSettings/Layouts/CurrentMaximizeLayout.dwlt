@@ -87,7 +87,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -226,9 +226,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: ac670000
-      m_LastClickedID: 26540
-      m_ExpandedIDs: 3ca2ffff14fbffff
+      m_SelectedIDs: 7a2d0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 04fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -389,7 +389,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       floating: 0
       collapsed: 0
-      displayed: 1
+      displayed: 0
       snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
@@ -505,9 +505,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.36344624, y: -9.34002, z: 13.178502}
+    m_Target: {x: 0, y: 272.3, z: 1.9850043}
     speed: 2
-    m_Value: {x: -0.36344624, y: -9.34002, z: 13.178502}
+    m_Value: {x: -51.79493, y: 270.85678, z: 14.090263}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -554,13 +554,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.31419602, y: 0.39196524, z: -0.14402239, w: -0.85290647}
+    m_Target: {x: 0.0074393204, y: 0.7519874, z: 0.009027931, w: -0.65974504}
     speed: 2
-    m_Value: {x: -0.31411, y: 0.39185795, z: -0.14398296, w: -0.852673}
+    m_Value: {x: -0.10723504, y: 0.71839243, z: -0.11294202, w: -0.6785892}
   m_Size:
-    m_Target: 17.716022
+    m_Target: 65.066666
     speed: 2
-    m_Value: 17.716022
+    m_Value: 32.793137
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -654,22 +654,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/RenderPipeline/Settings
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 75
   m_LastFolders:
-  - Assets
+  - Assets/RenderPipeline/Settings
   m_LastFoldersGridSize: 75
   m_LastProjectPath: F:\Workspace\QuarkRenderer
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 6e680000
-    m_LastClickedID: 26734
-    m_ExpandedIDs: 000000006e68000070680000726800007468000076680000786800007a6800007c6800007e68000080680000826800008468000086680000886800008a6800008c6800008e68000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 193.66663}
+    m_SelectedIDs: b6790000
+    m_LastClickedID: 31158
+    m_ExpandedIDs: 00000000ce770000d0770000d2770000d4770000d6770000d8770000da770000dc770000de770000e0770000e2770000e4770000e6770000e8770000ea770000ec770000ee770000f077000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -697,7 +697,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000006e68000070680000726800007468000076680000786800007a6800007c6800007e68000080680000826800008468000086680000886800008a6800008c6800008e680000
+    m_ExpandedIDs: 00000000ce770000d0770000d2770000d4770000d6770000d8770000da770000dc770000de770000e0770000e2770000e4770000e6770000e8770000ea770000ec770000ee770000f0770000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -722,8 +722,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: ac670000
-    m_LastClickedInstanceID: 26540
+    m_SelectedInstanceIDs: 7a2d0000
+    m_LastClickedInstanceID: 11642
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -801,8 +801,8 @@ MonoBehaviour:
     y: 0
     width: 605.3334
     height: 1347.3334
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}

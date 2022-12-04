@@ -64,7 +64,7 @@ Varyings OutlineVertex(Attributes input)
     float4 posCS = vertexInput.positionCS;
     float3 ndcNormal = normalize(normalCS) * posCS.w;
     ndcNormal.x *= scaleX;
-    posCS.xy += ndcNormal.xy * _OutlineWidth;
+    posCS.xy += ndcNormal.xy * _OutlineWidth * saturate(1 / posCS.w);
     output.positionCS = posCS;
     return output;
 }
